@@ -1,5 +1,6 @@
 defmodule CardsTest do
   use ExUnit.Case
+  doctest Cards
 
   describe "hello/0" do
     test "returns 'hello world'" do
@@ -37,6 +38,31 @@ defmodule CardsTest do
       {hand, remaining} = Cards.deal(deck, 3)
       assert hand == [1, 2, 3]
       assert remaining == [4, 5, 6]
+    end
+  end
+
+  describe "save/2" do
+    test "saves the deck to a file" do
+      deck = Cards.create_deck()
+      filename = "test_deck.txt"
+
+      # Ensure the file does not exist before the test
+      if File.exists?(filename) do
+        File.rm!(filename)
+      end
+
+      assert Cards.save(deck, filename) == :ok
+      assert File.exists?(filename)
+
+      # Clean up the file after the test
+      File.rm!(filename)
+    end
+
+    test "returns :error if there is an error saving the deck" do
+      deck = Cards.create_deck()
+      filename = "/invalid_path/test_deck.txt"
+
+      assert Cards.save(deck, filename) == :error
     end
   end
 end

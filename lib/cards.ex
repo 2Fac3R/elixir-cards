@@ -94,10 +94,10 @@ defmodule Cards do
 
   ## Examples
 
-      iex> tuple_to_string({:name, "Alice"})
+      iex> Cards.tuple_to_string({:name, "Alice"})
       "name Alice"
 
-      iex> tuple_to_string({:age, 30})
+      iex> Cards.tuple_to_string({:age, 30})
       "age 30"
   """
   def tuple_to_string({key, value}) do
@@ -125,7 +125,10 @@ defmodule Cards do
   """
   def save(deck, filename \\ "deck.txt") do
     content = deck |> Enum.map(&tuple_to_string/1) |> Enum.join("\n")
-    {:ok, :err} = File.write!(filename, content)
-    :ok
+
+    case File.write(filename, content) do
+      :ok -> :ok
+      {:error, _reason} -> :error
+    end
   end
 end
